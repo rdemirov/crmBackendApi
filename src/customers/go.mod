@@ -1,3 +1,3 @@
-module github.com/rdemirov/crmBackendApi/customers
+module customers
 
 go 1.19
