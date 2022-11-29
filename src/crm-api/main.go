@@ -26,10 +26,11 @@ func getCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	customer := customers.GetCustomer(id)
 	if customer.Id == "" {
-
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(nil)
 	} else {
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(customers.GetCustomer(id))
+		json.NewEncoder(w).Encode(customer)
 	}
 }
 

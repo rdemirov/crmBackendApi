@@ -81,17 +81,27 @@ func GetCustomer(id string) Customer {
 
 func UpdateCustomer(id string, customerData map[string]string) bool {
 	customerToUpdate := customers[id]
+	if customerToUpdate.Id == "" {
+		return false
+	}
 	customerToUpdate.update(customerData)
 	customers[id] = customerToUpdate
 	return true
 }
 
 func DeleteCustomer(id string) bool {
+	customerToDelete := customers[id]
+	if customerToDelete.Id == "" {
+		return false
+	}
 	delete(customers, id)
 	return true
 }
 
 func AddCustomer(c Customer) string {
+	if customers[c.Id].Id != "" {
+		return ""
+	}
 	newCustomer := Customer{
 		Id:        c.Id,
 		Name:      c.Name,

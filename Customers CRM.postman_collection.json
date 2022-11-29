@@ -1,7 +1,8 @@
 {
 	"info": {
-		"_postman_id": "e157e4d5-4b94-4942-a4a2-aa33e5368702",
+		"_postman_id": "c6fbd7a5-85bc-44e4-a068-2be46d419813",
 		"name": "Customers CRM",
+		"description": "This collection contains the API-s used to interact with the Customer backend",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -9,7 +10,22 @@
 			"name": "Get All customers",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3000/customers",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"customers"
+					]
+				},
+				"description": "Returns a list of all customers"
 			},
 			"response": []
 		},
@@ -17,7 +33,23 @@
 			"name": "Get Customer",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3000/customers/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"customers",
+						"1"
+					]
+				},
+				"description": "Returns the details for a customer with a given ID"
 			},
 			"response": []
 		},
@@ -39,17 +71,27 @@
 						"customers",
 						"1"
 					]
-				}
+				},
+				"description": "Delete a customer with a given ID"
 			},
 			"response": []
 		},
 		{
 			"name": "Add a customer",
 			"request": {
-				"method": "DELETE",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\t\"Name\":      \"Johaness Cabal\",\r\n\t\t\"Role\":      \"Administrator\",\r\n\t\t\"Email\":     \"jcabal@gmail.com\",\r\n\t\t\"Phone\":     \"052262928\",\r\n\t\t\"Contacted\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "127.0.0.1:3000/customers/1",
+					"raw": "127.0.0.1:3000/customers",
 					"host": [
 						"127",
 						"0",
@@ -58,10 +100,10 @@
 					],
 					"port": "3000",
 					"path": [
-						"customers",
-						"1"
+						"customers"
 					]
-				}
+				},
+				"description": "Create a new customer"
 			},
 			"response": []
 		},
@@ -92,7 +134,8 @@
 						"customers",
 						"1"
 					]
-				}
+				},
+				"description": "Update a given customer"
 			},
 			"response": []
 		}
