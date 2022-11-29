@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+
+	"github.com/google/uuid"
 )
 
 type Customer struct {
@@ -17,20 +19,20 @@ type Customer struct {
 
 func (c *Customer) update(customerData map[string]string) {
 	fmt.Println(customerData)
-	if customerData["name"] != "" {
-		c.Name = customerData["name"]
+	if customerData["Name"] != "" {
+		c.Name = customerData["Name"]
 	}
-	if customerData["role"] != "" {
-		c.Role = customerData["role"]
+	if customerData["Role"] != "" {
+		c.Role = customerData["Role"]
 	}
-	if customerData["email"] != "" {
-		c.Email = customerData["email"]
+	if customerData["Email"] != "" {
+		c.Email = customerData["Email"]
 	}
-	if customerData["phone"] != "" {
-		c.Phone = customerData["phone"]
+	if customerData["Phone"] != "" {
+		c.Phone = customerData["Phone"]
 	}
-	if customerData["contacted"] != "" {
-		c.Contacted, _ = strconv.ParseBool(customerData["contacted"])
+	if customerData["Contacted"] != "" {
+		c.Contacted, _ = strconv.ParseBool(customerData["Contacted"])
 	}
 
 	fmt.Println(c)
@@ -99,17 +101,16 @@ func DeleteCustomer(id string) bool {
 }
 
 func AddCustomer(c Customer) string {
-	if customers[c.Id].Id != "" {
-		return ""
-	}
+	customerUuid := uuid.New()
+	customerId := customerUuid.String()
 	newCustomer := Customer{
-		Id:        c.Id,
+		Id:        customerId,
 		Name:      c.Name,
 		Phone:     c.Phone,
 		Email:     c.Email,
 		Role:      c.Role,
 		Contacted: c.Contacted,
 	}
-	customers[c.Id] = newCustomer
-	return c.Id
+	customers[customerId] = newCustomer
+	return customerId
 }
