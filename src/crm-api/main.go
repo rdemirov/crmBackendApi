@@ -46,8 +46,14 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	log.Println(log.Ldate, "Deleting customer with ID", id)
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(customers.DeleteCustomer(id))
+	deletionResult := customers.DeleteCustomer(id)
+
+	if !deletionResult {
+		w.WriteHeader(http.StatusNotFound)
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+	json.NewEncoder(w).Encode(deletionResult)
 }
 
 func addCustomer(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +66,16 @@ func addCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	log.Println(log.Ldate, "Creating New Customer", customer.Id)
-	json.NewEncoder(w).Encode(customers.AddCustomer(customer))
+	creationResult := customers.AddCustomer(customer)
+
+	if creationResult == "" {
+		w.WriteHeader(http.StatusInternalServerError)
+
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+
+	json.NewEncoder(w).Encode(creationResult)
 }
 
 func updateCustomer(w http.ResponseWriter, r *http.Request) {
@@ -68,9 +83,15 @@ func updateCustomer(w http.ResponseWriter, r *http.Request) {
 	var customerMap = make(map[string]string)
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(reqBody, &customerMap)
-
+	w.Header().Set("Content-Type", "application/json")
 	log.Println(log.Ldate, "Updating Customer", id)
-	json.NewEncoder(w).Encode(customers.UpdateCustomer(id, customerMap))
+	updateResult := customers.UpdateCustomer(id, customerMap)
+	if !updateResult {
+		w.WriteHeader(http.StatusNotFound)
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+	json.NewEncoder(w).Encode(updateResult)
 }
 
 func main() {
