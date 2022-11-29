@@ -10,7 +10,6 @@ the configuration of the port used by the application. It contains the following
 
 ```
 APP_PORT=3000
-
 ```
 If no configuration is present, the default port is set to 3000.
 
@@ -25,7 +24,6 @@ The project is started with the following commands in the project folder:
 ```
 cd src/crm-api
 go run main.go
-
 ```
 ## Using the project
 
@@ -41,5 +39,4 @@ By default, the API URL is:
 
 ```
 http://127.0.0.1:3000
-
 ```
