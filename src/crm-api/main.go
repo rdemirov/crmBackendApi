@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -23,7 +24,13 @@ func getCustomer(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	log.Println(log.Ldate, "Displaying details of customer with ID", id)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(customers.GetCustomer(id))
+	customer := customers.GetCustomer(id)
+	if customer.Id == "" {
+
+	} else {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(customers.GetCustomer(id))
+	}
 }
 
 func getCustomers(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +45,31 @@ func deleteCustomer(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	log.Println(log.Ldate, "Deleting customer with ID", id)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(customers.DeleteCustomer(id))
+}
+
+func addCustomer(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var customer customers.Customer
+	err := decoder.Decode(&customer)
+	if err != nil {
+		log.Fatal(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	log.Println(log.Ldate, "Creating New Customer", customer.Id)
+	json.NewEncoder(w).Encode(customers.AddCustomer(customer))
+}
+
+func updateCustomer(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	var customerMap = make(map[string]string)
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	json.Unmarshal(reqBody, &customerMap)
+
+	log.Println(log.Ldate, "Updating Customer", id)
+	json.NewEncoder(w).Encode(customers.UpdateCustomer(id, customerMap))
 }
 
 func main() {
@@ -54,7 +85,9 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/", showIndexPage).Methods("GET")
 	router.HandleFunc("/customers", getCustomers).Methods("GET")
+	router.HandleFunc("/customers", addCustomer).Methods("POST")
 	router.HandleFunc("/customers/{id}", getCustomer).Methods("GET")
+	router.HandleFunc("/customers/{id}", updateCustomer).Methods("PATCH")
 	router.HandleFunc("/customers/{id}", deleteCustomer).Methods("DELETE")
 
 	fmt.Println("Starting server on port", port)

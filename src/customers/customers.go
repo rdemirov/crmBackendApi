@@ -1,6 +1,10 @@
 package customers
 
-import "log"
+import (
+	"fmt"
+	"log"
+	"strconv"
+)
 
 type Customer struct {
 	Id        string
@@ -9,6 +13,28 @@ type Customer struct {
 	Email     string
 	Phone     string
 	Contacted bool
+}
+
+func (c *Customer) update(customerData map[string]string) {
+	fmt.Println(customerData)
+	if customerData["name"] != "" {
+		c.Name = customerData["name"]
+	}
+	if customerData["role"] != "" {
+		c.Role = customerData["role"]
+	}
+	if customerData["email"] != "" {
+		c.Email = customerData["email"]
+	}
+	if customerData["phone"] != "" {
+		c.Phone = customerData["phone"]
+	}
+	if customerData["contacted"] != "" {
+		c.Contacted, _ = strconv.ParseBool(customerData["contacted"])
+	}
+
+	fmt.Println(c)
+
 }
 
 var customers = make(map[string]Customer)
@@ -53,20 +79,27 @@ func GetCustomer(id string) Customer {
 	return customers[id]
 }
 
+func UpdateCustomer(id string, customerData map[string]string) bool {
+	customerToUpdate := customers[id]
+	customerToUpdate.update(customerData)
+	customers[id] = customerToUpdate
+	return true
+}
+
 func DeleteCustomer(id string) bool {
 	delete(customers, id)
 	return true
 }
 
-func AddCustomer(id string, name string, phone string, email string, role string, contacted bool) string {
+func AddCustomer(c Customer) string {
 	newCustomer := Customer{
-		Id:        id,
-		Name:      name,
-		Phone:     phone,
-		Email:     email,
-		Role:      role,
-		Contacted: contacted,
+		Id:        c.Id,
+		Name:      c.Name,
+		Phone:     c.Phone,
+		Email:     c.Email,
+		Role:      c.Role,
+		Contacted: c.Contacted,
 	}
-	customers[id] = newCustomer
-	return id
+	customers[c.Id] = newCustomer
+	return c.Id
 }
