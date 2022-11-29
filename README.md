@@ -13,6 +13,8 @@ APP_PORT=3000
 ```
 If no configuration is present, the default port is set to 3000.
 
+- /src/customers - contains the struct and methods for storing and amanging customer data
+
 ## Configuration
 
 The only configuration needed by the application is the option to set the application's port
@@ -40,3 +42,4 @@ By default, the API URL is:
 ```
 http://127.0.0.1:3000
 ```
+API postman collection can be found in the project root folder, in file "Customers CRM.postman_collection.json"
